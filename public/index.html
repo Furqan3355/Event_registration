@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Registration System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #3b82f6;
+            --primary-dark: #1e40af;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --bg: #f9fafb;
+            --surface: #ffffff;
+            --text: #111827;
+            --text-light: #6b7280;
+            --border: #e5e7eb;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--text);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: var(--surface);
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 900px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .card h2 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text);
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+            font-family: inherit;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, var(--primary) 0%, #2563eb 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: var(--border);
+            color: var(--text);
+            margin-top: 10px;
+        }
+
+        .btn-secondary:hover {
+            box-shadow: 0 6px 12px rgba(229, 231, 235, 0.5);
+        }
+
+        .events-grid {
+            display: grid;
+            gap: 20px;
+        }
+
+        .event-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 12px;
+            padding: 20px;
+            border-left: 4px solid var(--primary);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .event-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(59, 130, 246, 0.2);
+        }
+
+        .event-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+        }
+
+        .event-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .event-status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .status-available {
+            background: rgba(16, 185, 129, 0.2);
+            color: #047857;
+        }
+
+        .status-full {
+            background: rgba(239, 68, 68, 0.2);
+            color: #991b1b;
+        }
+
+        .event-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .detail-item {
+            font-size: 0.95rem;
+        }
+
+        .detail-label {
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .detail-value {
+            color: var(--text);
+            font-weight: 700;
+            margin-top: 4px;
+        }
+
+        .seats-bar {
+            width: 100%;
+            height: 24px;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .seats-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--primary-dark) 100%);
+            transition: width 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
+        .seats-text {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-bottom: 10px;
+        }
+
+        .event-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .btn-register {
+            background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+            font-size: 0.9rem;
+            padding: 10px;
+        }
+
+        .btn-register:hover {
+            box-shadow: 0 6px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-register:disabled {
+            background: var(--text-light);
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .registrations-list {
+            display: grid;
+            gap: 15px;
+        }
+
+        .registration-item {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid var(--success);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .registration-info h3 {
+            font-size: 1rem;
+            margin-bottom: 4px;
+            color: var(--text);
+        }
+
+        .registration-info p {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        .btn-cancel {
+            background: var(--danger);
+            padding: 8px 16px;
+            font-size: 0.85rem;
+            width: auto;
+            min-width: 100px;
+        }
+
+        .btn-cancel:hover {
+            box-shadow: 0 6px 12px rgba(239, 68, 68, 0.3);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-light);
+            font-size: 1.1rem;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            border: 3px solid var(--border);
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .message {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .message.success {
+            background: rgba(16, 185, 129, 0.2);
+            color: #047857;
+            border-left: 4px solid var(--success);
+        }
+
+        .message.error {
+            background: rgba(239, 68, 68, 0.2);
+            color: #991b1b;
+            border-left: 4px solid var(--danger);
+        }
+
+        .message.info {
+            background: rgba(59, 130, 246, 0.2);
+            color: #1e40af;
+            border-left: 4px solid var(--primary);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-light);
+        }
+
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+
+        footer {
+            text-align: center;
+            color: white;
+            padding: 20px;
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .tab-button {
+            padding: 12px 20px;
+            background: none;
+            border: none;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            color: var(--text-light);
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .tab-button.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📅 Event Registration System</h1>
+            <p class="subtitle">Create events and register attendees seamlessly</p>
+        </header>
+
+        <div class="main-content">
+            <!-- Create Event Card -->
+            <div class="card">
+                <h2>➕ Create New Event</h2>
+                <form id="eventForm">
+                    <div class="form-group">
+                        <label for="eventName">Event Name</label>
+                        <input type="text" id="eventName" placeholder="e.g., Tech Summit 2026" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="totalSeats">Total Seats</label>
+                        <input type="number" id="totalSeats" placeholder="e.g., 100" min="1" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="eventDate">Event Date & Time</label>
+                        <input type="datetime-local" id="eventDate" required>
+                    </div>
+                    <button type="submit">Create Event</button>
+                    <div id="eventMessage"></div>
+                </form>
+            </div>
+
+            <!-- Register User Card -->
+            <div class="card">
+                <h2>👤 Register for Event</h2>
+                <form id="registrationForm">
+                    <div class="form-group">
+                        <label for="userName">Your Name</label>
+                        <input type="text" id="userName" placeholder="e.g., John Doe" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="selectEvent">Select Event</label>
+                        <select id="selectEvent" required>
+                            <option value="">-- Choose an event --</option>
+                        </select>
+                    </div>
+                    <button type="submit">Register</button>
+                    <div id="registrationMessage"></div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Tabs for Events and Registrations -->
+        <div class="tabs">
+            <button class="tab-button active" data-tab="events">📋 All Events</button>
+            <button class="tab-button" data-tab="registrations">✓ My Registrations</button>
+        </div>
+
+        <!-- Events Tab -->
+        <div id="events" class="tab-content active">
+            <div class="card">
+                <h2>Available Events</h2>
+                <div id="eventsList" class="events-grid">
+                    <div class="loading">
+                        <span class="spinner"></span>
+                        Loading events...
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Registrations Tab -->
+        <div id="registrations" class="tab-content">
+            <div class="card">
+                <h2>Your Registrations</h2>
+                <div id="registrationsList" class="registrations-list">
+                    <div class="loading">
+                        <span class="spinner"></span>
+                        Loading registrations...
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Event Registration System v1.0 | Built with Node.js & Express</p>
+        </footer>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:3000';
+
+        // Tab switching
+        document.querySelectorAll('.tab-button').forEach(button => {
+            button.addEventListener('click', () => {
+                const tabName = button.getAttribute('data-tab');
+                document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+                button.classList.add('active');
+                document.getElementById(tabName).classList.add('active');
+                if (tabName === 'events') loadEvents();
+                if (tabName === 'registrations') loadRegistrations();
+            });
+        });
+
+        // Load events and populate dropdown
+        async function loadEvents() {
+            try {
+                const response = await fetch(`${API_URL}/events?sort=date`);
+                const data = await response.json();
+                const events = data.data || [];
+
+                // Update dropdown
+                const dropdown = document.getElementById('selectEvent');
+                dropdown.innerHTML = '<option value="">-- Choose an event --</option>';
+                events.forEach(event => {
+                    const option = document.createElement('option');
+                    option.value = event.id;
+                    option.textContent = `${event.name} (${event.availableSeats} seats available)`;
+                    dropdown.appendChild(option);
+                });
+
+                // Display events
+                const eventsList = document.getElementById('eventsList');
+                if (events.length === 0) {
+                    eventsList.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📭</div><p>No events yet. Create one to get started!</p></div>';
+                    return;
+                }
+
+                eventsList.innerHTML = events.map(event => {
+                    const totalSeats = event.totalSeats;
+                    const available = event.availableSeats;
+                    const registered = event.activeRegistrations || 0;
+                    const percentage = Math.round((registered / totalSeats) * 100);
+                    const isAvailable = available > 0;
+                    const eventDate = new Date(event.eventDate);
+                    const formattedDate = eventDate.toLocaleDateString('en-US', { 
+                        month: 'short', 
+                        day: 'numeric', 
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+
+                    return `
+                        <div class="event-card">
+                            <div class="event-header">
+                                <div class="event-title">${escapeHtml(event.name)}</div>
+                                <div class="event-status ${isAvailable ? 'status-available' : 'status-full'}">
+                                    ${isAvailable ? '✓ Available' : '✗ Full'}
+                                </div>
+                            </div>
+                            <div class="event-details">
+                                <div class="detail-item">
+                                    <div class="detail-label">Date & Time</div>
+                                    <div class="detail-value">${formattedDate}</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">Registrations</div>
+                                    <div class="detail-value">${registered}/${totalSeats}</div>
+                                </div>
+                            </div>
+                            <div class="seats-text">Capacity: ${percentage}% full</div>
+                            <div class="seats-bar">
+                                <div class="seats-fill" style="width: ${percentage}%"></div>
+                            </div>
+                            <div class="event-actions">
+                                <button class="btn-register" onclick="quickRegister('${event.id}', '${escapeHtml(event.name)}')" ${!isAvailable ? 'disabled' : ''}>
+                                    Register
+                                </button>
+                                <button class="btn-secondary" onclick="copyEventId('${event.id}')">Copy ID</button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } catch (error) {
+                console.error('Error loading events:', error);
+                document.getElementById('eventsList').innerHTML = `<div class="message error">Error loading events: ${error.message}</div>`;
+            }
+        }
+
+        // Load registrations
+        async function loadRegistrations() {
+            try {
+                const response = await fetch(`${API_URL}/registrations`);
+                const data = await response.json();
+                const registrations = data.data || [];
+
+                const registrationsList = document.getElementById('registrationsList');
+                if (registrations.length === 0) {
+                    registrationsList.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📌</div><p>No registrations yet. Register for an event!</p></div>';
+                    return;
+                }
+
+                // Group by status
+                const active = registrations.filter(r => r.status === 'active');
+                const cancelled = registrations.filter(r => r.status === 'cancelled');
+
+                let html = '';
+                if (active.length > 0) {
+                    html += '<div style="margin-bottom: 20px;">';
+                    html += '<h3 style="margin-bottom: 10px; color: var(--text);">Active Registrations</h3>';
+                    html += active.map(reg => {
+                        const regDate = new Date(reg.registeredAt);
+                        const formattedDate = regDate.toLocaleDateString('en-US', { 
+                            month: 'short', 
+                            day: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        });
+                        return `
+                            <div class="registration-item">
+                                <div class="registration-info">
+                                    <h3>${escapeHtml(reg.userName)}</h3>
+                                    <p>Event ID: ${reg.eventId} | Registered: ${formattedDate}</p>
+                                </div>
+                                <button class="btn-cancel" onclick="cancelRegistration('${reg.id}')">Cancel</button>
+                            </div>
+                        `;
+                    }).join('');
+                    html += '</div>';
+                }
+
+                if (cancelled.length > 0) {
+                    html += '<div style="margin-bottom: 20px;">';
+                    html += '<h3 style="margin-bottom: 10px; color: var(--text-light);">Cancelled Registrations</h3>';
+                    html += cancelled.map(reg => {
+                        const regDate = new Date(reg.registeredAt);
+                        const formattedDate = regDate.toLocaleDateString('en-US', { 
+                            month: 'short', 
+                            day: 'numeric'
+                        });
+                        return `
+                            <div class="registration-item" style="opacity: 0.6;">
+                                <div class="registration-info">
+                                    <h3 style="text-decoration: line-through;">${escapeHtml(reg.userName)}</h3>
+                                    <p>Cancelled on: ${formattedDate}</p>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                    html += '</div>';
+                }
+
+                registrationsList.innerHTML = html;
+            } catch (error) {
+                console.error('Error loading registrations:', error);
+                document.getElementById('registrationsList').innerHTML = `<div class="message error">Error loading registrations: ${error.message}</div>`;
+            }
+        }
+
+        // Quick register from event
+        async function quickRegister(eventId, eventName) {
+            const userName = prompt(`Enter your name to register for "${eventName}":`);
+            if (!userName || !userName.trim()) return;
+
+            await registerUser(eventId, userName.trim());
+        }
+
+        // Create event
+        document.getElementById('eventForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('eventName').value;
+            const totalSeats = parseInt(document.getElementById('totalSeats').value);
+            const eventDate = document.getElementById('eventDate').value;
+
+            const messageDiv = document.getElementById('eventMessage');
+            messageDiv.innerHTML = '<div class="loading"><span class="spinner"></span> Creating event...</div>';
+
+            try {
+                const response = await fetch(`${API_URL}/events`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name,
+                        totalSeats,
+                        eventDate: new Date(eventDate).toISOString()
+                    })
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    messageDiv.innerHTML = '<div class="message success">✓ Event created successfully!</div>';
+                    document.getElementById('eventForm').reset();
+                    setTimeout(() => {
+                        messageDiv.innerHTML = '';
+                        loadEvents();
+                    }, 2000);
+                } else {
+                    messageDiv.innerHTML = `<div class="message error">✗ ${data.details ? data.details[0] : data.error}</div>`;
+                }
+            } catch (error) {
+                messageDiv.innerHTML = `<div class="message error">✗ Error: ${error.message}</div>`;
+            }
+        });
+
+        // Register user
+        document.getElementById('registrationForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const userName = document.getElementById('userName').value;
+            const eventId = document.getElementById('selectEvent').value;
+
+            if (!eventId) {
+                document.getElementById('registrationMessage').innerHTML = '<div class="message error">✗ Please select an event</div>';
+                return;
+            }
+
+            await registerUser(eventId, userName);
+        });
+
+        async function registerUser(eventId, userName) {
+            const messageDiv = document.getElementById('registrationMessage');
+            messageDiv.innerHTML = '<div class="loading"><span class="spinner"></span> Registering...</div>';
+
+            try {
+                const response = await fetch(`${API_URL}/registrations`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ eventId, userName })
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    messageDiv.innerHTML = '<div class="message success">✓ Registered successfully!</div>';
+                    document.getElementById('userName').value = '';
+                    document.getElementById('selectEvent').value = '';
+                    setTimeout(() => {
+                        messageDiv.innerHTML = '';
+                        loadEvents();
+                        loadRegistrations();
+                    }, 2000);
+                } else {
+                    const errorMsg = data.details ? data.details[0] : data.error;
+                    messageDiv.innerHTML = `<div class="message error">✗ ${errorMsg}</div>`;
+                }
+            } catch (error) {
+                messageDiv.innerHTML = `<div class="message error">✗ Error: ${error.message}</div>`;
+            }
+        }
+
+        // Cancel registration
+        async function cancelRegistration(registrationId) {
+            if (!confirm('Are you sure you want to cancel this registration?')) return;
+
+            try {
+                const response = await fetch(`${API_URL}/registrations/${registrationId}/cancel`, {
+                    method: 'PATCH'
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    loadRegistrations();
+                    loadEvents();
+                } else {
+                    alert(`Error: ${data.error}`);
+                }
+            } catch (error) {
+                alert(`Error cancelling registration: ${error.message}`);
+            }
+        }
+
+        // Utility function to escape HTML
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Copy to clipboard
+        function copyEventId(id) {
+            navigator.clipboard.writeText(id).then(() => {
+                alert('Event ID copied to clipboard!');
+            }).catch(err => {
+                console.error('Error copying:', err);
+            });
+        }
+
+        // Set minimum date to now
+        const now = new Date();
+        now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+        document.getElementById('eventDate').min = now.toISOString().slice(0, 16);
+
+        // Initial load
+        loadEvents();
+    </script>
+</body>
+</html>

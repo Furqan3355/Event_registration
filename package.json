@@ -1,0 +1,17 @@
+{
+  "name": "event-registration-system",
+  "version": "1.0.0",
+  "description": "A simple Event Registration System API built with Express.js",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js"
+  },
+  "keywords": ["event", "registration", "api", "express"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "uuid": "^9.0.0"
+  }
+}

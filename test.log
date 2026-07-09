@@ -1,0 +1,64 @@
+🤖 Starting Integration Tests...
+Starting server on port 3009...
+
+--- 1. Testing Health Endpoint ---
+  ✅ Passed: Health endpoint status is 200
+  ✅ Passed: Health status is ok
+
+--- 2. Testing Event Creation ---
+  ✅ Passed: Create event returns 201
+  ✅ Passed: Response indicates success
+  ✅ Passed: Event name is trimmed in stored data
+  ✅ Passed: Total seats matches
+  ✅ Passed: Event ID generated
+
+--- 3. Testing Duplicate Event Rejection ---
+  ✅ Passed: Duplicate exact name event returns 400
+  ✅ Passed: Duplicate is blocked
+  ✅ Passed: Error title matches
+  ✅ Passed: Error details include uniqueness message
+  ✅ Passed: Duplicate event with case/space variations returns 400
+
+--- 4. Testing Event Creation Validations ---
+  ✅ Passed: Invalid fields return 400
+  ✅ Passed: Validation failed indicator
+  ✅ Passed: At least 2 error details returned
+
+--- 5. Testing User Registration ---
+  ✅ Passed: First registration returns 201
+  ✅ Passed: Registration reports success
+  ✅ Passed: User name is trimmed
+  ✅ Passed: Registration status is active
+
+--- 6. Testing Duplicate Registration Prevention ---
+  ✅ Passed: Duplicate user registration returns 409 Conflict
+  ✅ Passed: Blocked duplicate registration success is false
+  ✅ Passed: Expected error message
+  ✅ Passed: Duplicate user registration with whitespace padding returns 409 Conflict
+
+--- 7. Testing Overbooking ---
+  ✅ Passed: Second registration succeeds (201)
+  ✅ Passed: Third registration succeeds (201)
+  ✅ Passed: Available seats is 0
+  ✅ Passed: Active registrations count is 3
+  ✅ Passed: 4th registration fails with 409 because event is full
+  ✅ Passed: Error mentions full event
+
+--- 8. Testing Cancellation ---
+  ✅ Passed: Cancellation returns 200
+  ✅ Passed: Cancellation success is true
+  ✅ Passed: Status is cancelled
+  ✅ Passed: cancelledAt timestamp is populated
+  ✅ Passed: Available seats incremented to 1 after cancellation
+  ✅ Passed: Active registrations decremented to 2
+  ✅ Passed: Cancelling already cancelled registration returns 409
+  ✅ Passed: Expected error message
+
+--- 9. Testing Query Filtering and Sorting ---
+  ✅ Passed: Query events endpoint status is 200
+  ✅ Passed: Returned multiple events
+  ✅ Passed: Events are correctly sorted in ascending order of date
+
+🌟 ALL INTEGRATION TESTS PASSED SUCCESSFULLY! 🌟
+Shutting down server...
+Test DB restored to backup state. Done.

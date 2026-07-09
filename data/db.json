@@ -1,0 +1,66 @@
+{
+  "events": [
+    {
+      "id": "c3b0cbea-9fac-4069-9c22-3d497f935eb1",
+      "name": "Tech Summit 2026",
+      "totalSeats": 3,
+      "eventDate": "2026-12-20T10:00:00Z",
+      "createdAt": "2026-07-08T17:15:58.362Z"
+    },
+    {
+      "id": "52125521-00dd-4e61-ac45-9f4e6ff0b1cb",
+      "name": "Web Dev Workshop",
+      "totalSeats": 2,
+      "eventDate": "2026-11-15T14:00:00Z",
+      "createdAt": "2026-07-08T17:15:58.370Z"
+    },
+    {
+      "id": "597bc754-f0c4-4b23-921e-7c3b09fcf01c",
+      "name": "a",
+      "totalSeats": 15,
+      "eventDate": "2026-07-23T05:40:00.000Z",
+      "createdAt": "2026-07-08T17:36:54.388Z"
+    },
+    {
+      "id": "9b490c96-9e3e-4ce9-b94d-5498f7eba299",
+      "name": "test",
+      "totalSeats": 2,
+      "eventDate": "2026-07-30T17:42:00.000Z",
+      "createdAt": "2026-07-08T17:38:13.932Z"
+    }
+  ],
+  "registrations": [
+    {
+      "id": "de4c4421-8d3f-41b3-981f-860c8e8e8f14",
+      "eventId": "52125521-00dd-4e61-ac45-9f4e6ff0b1cb",
+      "userName": "Ali Khan",
+      "status": "cancelled",
+      "registeredAt": "2026-07-08T17:15:58.394Z",
+      "cancelledAt": "2026-07-08T17:38:48.038Z"
+    },
+    {
+      "id": "7011a791-8c92-49dc-b040-b0cca06019bd",
+      "eventId": "52125521-00dd-4e61-ac45-9f4e6ff0b1cb",
+      "userName": "Jane Doe",
+      "status": "cancelled",
+      "registeredAt": "2026-07-08T17:15:58.405Z",
+      "cancelledAt": "2026-07-08T17:38:51.077Z"
+    },
+    {
+      "id": "58ebddbd-a0df-469b-bb4f-eb6690f6ef19",
+      "eventId": "597bc754-f0c4-4b23-921e-7c3b09fcf01c",
+      "userName": "affan",
+      "status": "cancelled",
+      "registeredAt": "2026-07-08T17:37:23.103Z",
+      "cancelledAt": "2026-07-08T17:39:11.872Z"
+    },
+    {
+      "id": "3512398b-ff16-49e3-b6e0-3d35cac8f12c",
+      "eventId": "9b490c96-9e3e-4ce9-b94d-5498f7eba299",
+      "userName": "te",
+      "status": "active",
+      "registeredAt": "2026-07-08T17:38:25.392Z",
+      "cancelledAt": null
+    }
+  ]
+}
